@@ -6,7 +6,7 @@
 
 | Name | Student ID | GitHub Username 
 |---|---|---|
-| Sai Wanna Htoo | 67051400028 | `lelouchlynx` |
+| Sai Wanna Htoo | 6705140028 | `lelouchlynx` |
 | Toe Twel Tar Htut | 6705140007 | `YollaYollie` |
 | Kyaw San | 6705140029 | `KyawSanAlpha` | 
 | Aung Chan Myae | 6705140035 | `Rowan10-uzzz` |

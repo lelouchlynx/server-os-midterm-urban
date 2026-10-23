@@ -1,0 +1,296 @@
+Script started on 2026-10-23 07:16:12+00:00 [TERM="xterm-256color" TTY="/dev/pts/1" COLUMNS="145" LINES="36"]
+[?2004h[01;32mroot@ubuntu[00m:[01;34m~[00m$ [7mcat /etc/bind/named.conf.options[27mcat /etc/bind/named.conf.options
+[?2004loptions {
+	directory "/var/cache/bind";
+	listen-on { any; };
+	allow-query { any; };
+	recursion no;
+};
+[?2004h[01;32mroot@ubuntu[00m:[01;34m~[00m$ [K[7mcat /etc/bind/named.conf.local[27mcat /etc/bind/named.conf.local
+[?2004lzone "novapeak.lab" {
+	type master;
+	file "/etc/bind/db.MISSING";
+};
+
+zone "19.168.192.in-addr.arpa" {
+	type master;
+	file "/etc/bind/db.novapeak.lab.rev";
+};
+[?2004h[01;32mroot@ubuntu[00m:[01;34m~[00m$ [K[K[01;32mroot@ubuntu[00m:[01;34m~[00m$ [K[01;32mroot@ubuntu[00m:[01;34m~[00m$ [K[01;32mroot@ubuntu[00m:[01;34m~[00m$ [7mls -l /etc/bind/db.*[27mls -l /etc/bind/db.*
+[?2004l-rw-r--r-- 1 root root 255 Aug 21  2025 /etc/bind/db.0
+-rw-r--r-- 1 root root 271 Aug 18  2025 /etc/bind/db.127
+-rw-r--r-- 1 root root 237 Aug 18  2025 /etc/bind/db.255
+-rw-r--r-- 1 root root 353 Aug 18  2025 /etc/bind/db.empty
+-rw-r--r-- 1 root root 270 Aug 18  2025 /etc/bind/db.local
+-rw-r--r-- 1 bind bind 212 Oct 23 07:11 /etc/bind/db.novapeak.lab
+-rw-r--r-- 1 bind bind 233 Oct 23 07:11 /etc/bind/db.novapeak.lab.rev
+[?2004h[01;32mroot@ubuntu[00m:[01;34m~[00m$ [7mnamed-checkconf -z[27mnamed-checkconf -z
+[?2004lzone novapeak.lab/IN: loading from master file /etc/bind/db.MISSING failed: file not found
+zone novapeak.lab/IN: not loaded due to errors.
+_default/novapeak.lab/IN: file not found
+zone 19.168.192.in-addr.arpa/IN: loaded serial 2024010101
+zone localhost/IN: loaded serial 2
+zone 127.in-addr.arpa/IN: loaded serial 1
+zone 0.in-addr.arpa/IN: loaded serial 1
+zone 255.in-addr.arpa/IN: loaded serial 1
+[?2004h[01;32mroot@ubuntu[00m:[01;34m~[00m$ [7mcat /etc/bind/db.novapeak.lab[27mcat /etc/bind/db.novapeak.lab
+[?2004l$TTL 3600
+@ IN SOA ns1.novapeak.lab. admin.novapeak.lab. ( 2024010101 3600 1800 604800 3600 )
+@ IN NS ns1.novapeak.lab.
+ns1 IN A 192.168.19.10
+www IN A 192.168.19.20
+mail IN A 192.168.19.30
+api IN A 192.168.19.1
+[?2004h[01;32mroot@ubuntu[00m:[01;34m~[00m$ [K[7mcat /etc/bind/db.novapeak.lab.rev[27mcat /etc/bind/db.novapeak.lab.rev
+[?2004l$TTL 3600
+@ IN SOA ns1.novapeak.lab. admin.novapeak.lab. ( 2024010101 3600 1800 604800 3600 )
+@ IN NS ns1.novapeak.lab.
+10 IN PTR ns1.novapeak.lab.
+20 IN PTR www.novapeak.lab.
+30 IN PTR mail.novapeak.lab.
+40 IN PTR api.novapeak.lab.
+[?2004h[01;32mroot@ubuntu[00m:[01;34m~[00m$ [K[7mcat /etc/dhcp/dhcpd.conf[27mcat /etc/dhcp/dhcpd.conf
+[?2004loption domain-name "novapeak.lab";
+default-lease-time 3600;
+max-lease-time 7200;
+
+subnet 192.168.19.0 netmask 255.255.255.0 {
+	range 192.168.19.104 192.168.19.144;
+	option routers 192.168.19.1;
+	option domain-name-servers 8.8.8.8;
+}
+[?2004h[01;32mroot@ubuntu[00m:[01;34m~[00m$ [7mcat /etc/default/isc-dhcp-server[27mcat /etc/default/isc-dhcp-server
+[?2004lINTERFACESv4="lan0"
+INTERFACESv6=""
+[?2004h[01;32mroot@ubuntu[00m:[01;34m~[00m$ [K[7miptables -vnL INPUT --line-numbers[27miptables -vnL INPUT --line-numbers
+[?2004lChain INPUT (policy ACCEPT 498 packets, 33973 bytes)
+num   pkts bytes target     prot opt in     out     source               destination         
+1        0     0 DROP       17   --  *      *       0.0.0.0/0            0.0.0.0/0            udp dpt:53
+[?2004h[01;32mroot@ubuntu[00m:[01;34m~[00m$ [K[7mnano /etc/bind/named.conf.local[27mnano /etc/bind/named.conf.local
+[?2004l[?2004h[?1049h[22;0;0t[1;36r(B[m[4l[?7h[39;49m[?1h=[?1h=[?25l[39;49m(B[m[H[2J[34;66H(B[0;7m[ Reading... ](B[m[34;65H(B[0;7m[ Read 9 lines ](B[m[H(B[0;7m  GNU nano 7.2 [47b/etc/bind/named.conf.local [55b [1;144H(B[m[35d(B[0;7m^G(B[m Help[35;17H(B[0;7m^O(B[m Write Out    (B[0;7m^W(B[m Where Is     (B[0;7m^K(B[m Cut[35;65H(B[0;7m^T(B[m Execute[81G(B[0;7m^C(B[m Location     (B[0;7mM-U(B[m Undo[35;113H(B[0;7mM-A(B[m Set Mark    (B[0;7mM-](B[m To Bracket[36d(B[0;7m^X(B[m Exit[36;17H(B[0;7m^R(B[m Read File    (B[0;7m^\(B[m Replace[49G(B[0;7m^U(B[m Paste[36;65H(B[0;7m^J(B[m Justify[81G(B[0;7m^/(B[m Go To Line   (B[0;7mM-E(B[m Redo[36;113H(B[0;7mM-6(B[m Copy[36;129H(B[0;7m^Q(B[m Where Was[2dzone "novapeak.lab" {[3;8H[38;5;208m[1K [39m(B[mtype master;[4;8H[38;5;208m[1K [39m(B[mfile "/etc/bind/db.MISSING";[5d};[7dzone "19.168.192.in-addr.arpa" {[8;8H[38;5;208m[1K [39m(B[mtype master;[9;8H[38;5;208m[1K [39m(B[mfile "/etc/bind/db.novapeak.lab.rev";[10d};[2d[?12l[?25h[?25l[?12l[?25h[3d[?25l[?12l[?25h[4d[?25l[?12l[?25h[5d[?25l[?12l[?25h[A[?25l[?12l[?25h[4;9H[?25l[?12l[?25hf[?25l[?12l[?25hi[?25l[?12l[?25hl[?25l[?12l[?25he[?25l[?12l[?25h [?25l[?12l[?25h"[?25l[?12l[?25h/[?25l[?12l[?25he[?25l[?12l[?25htc[?25l[?12l[?25h/[?25l[?12l[?25hb[?25l[?12l[?25hi[?25l[?12l[?25hn[?25l[34d[K[?12l[?25h[4;24H[?25l[?12l[?25h/[?25l[?12l[?25hd[?25l[?12l[?25hb[?25l[?12l[?25h.[?25l[?12l[?25hM[?25l[?12l[?25hI[?25l[?12l[?25hS[?25l[?12l[?25hS[?25l[?12l[?25hI[?25l[?12l[?25hN[?25l[?12l[?25hG[?25l[?12l[?25h"[?25l[?12l[?25h;[?25l[?12l[?25h[5d[?25l[?12l[?25h[4;37H[?25l[1;90H(B[0;7m*[144G(B[m[?12l[?25h[4;36H [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h[?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25lfile "/etc/bind/db.novapeak.lab";[?12l[?25h[?25l[35;17H[20X[35;37H(B[0;7mM-D(B[m DOS Format    [35;65H [7b(B[0;7mM-A(B[m Append[26X[35;109H(B[0;7mM-B(B[m Backup File[K[36;2H(B[0;7mC(B[m Cancel[17G[20X[36;37H(B[0;7mM-M(B[m Mac Format      [36;65H [7b(B[0;7mM-P(B[m Prepend[25X[36;109H(B[0;7m^T(B[m Browse[K[34d(B[0;7mFile Name to Write: /etc/bind/named.conf.local [97b [34;47H(B[m[?12l[?25h[?25l[34;65H[1K (B[0;7m[ Writing... ](B[m[K[1;90H(B[0;7m [144G(B[m[34;65H(B[0;7m[ Wrote 9 lines ](B[m[35;17H(B[0;7m^O(B[m Write Out    (B[0;7m^W(B[m Where Is     (B[0;7m^K(B[m Cut[35;65H(B[0;7m^T(B[m Execute      (B[0;7m^C(B[m Location     (B[0;7mM-U(B[m Undo [7b(B[0;7mM-A(B[m Set Mark    (B[0;7mM-](B[m To Bracket[36;2H(B[0;7mX(B[m Exit  [17G(B[0;7m^R(B[m Read File    (B[0;7m^\(B[m Replace      (B[0;7m^U(B[m Paste[36;65H(B[0;7m^J(B[m Justify      (B[0;7m^/(B[m Go To Line   (B[0;7mM-E(B[m Redo [7b(B[0;7mM-6(B[m Copy[36;129H(B[0;7m^Q(B[m Where Was[?12l[?25h[4;42H[?25l[34d[J[36d[?12l[?25h[36;1H[?1049l[23;0;0t[?1l>[?2004l[?2004h[01;32mroot@ubuntu[00m:[01;34m~[00m$ [K[7mnamed-checkconf -z[27mnamed-checkconf -z
+[?2004lzone novapeak.lab/IN: loaded serial 2024010101
+zone 19.168.192.in-addr.arpa/IN: loaded serial 2024010101
+zone localhost/IN: loaded serial 2
+zone 127.in-addr.arpa/IN: loaded serial 1
+zone 0.in-addr.arpa/IN: loaded serial 1
+zone 255.in-addr.arpa/IN: loaded serial 1
+[?2004h[01;32mroot@ubuntu[00m:[01;34m~[00m$ [7msystemctl restart named[27msystemctl restart named
+[?2004l[?2004h[01;32mroot@ubuntu[00m:[01;34m~[00m$ [7msystemctl status named --no-pager[27msystemctl status named --no-pager
+[?2004l[0;1;32m●[0m named.service - BIND Domain Name Server
+     Loaded: loaded (]8;;file://ubuntu/usr/lib/systemd/system/named.service/usr/lib/systemd/system/named.service]8;;; [0;1;32menabled[0m; preset: [0;1;32menabled[0m)
+     Active: [0;1;32mactive (running)[0m since Fri 2026-10-23 07:19:09 UTC; 7s ago
+       Docs: ]8;;man:named(8)man:named(8)]8;;
+   Main PID: 2750 (named)
+     Status: "[0;1;36mrunning[0m"
+      Tasks: 4 (limit: 2237)
+     Memory: 21.9M (peak: 22.2M)
+        CPU: 64ms
+     CGroup: /system.slice/named.service
+             └─[0;38;5;245m2750 /usr/sbin/named -f -u bind[0m
+
+Oct 23 07:19:09 ubuntu named[2750]: SERVFAIL unexpected RCODE resolving './NS/IN': 198.41.0.4#53
+Oct 23 07:19:09 ubuntu named[2750]: SERVFAIL unexpected RCODE resolving './NS/IN': 192.33.4.12#53
+Oct 23 07:19:09 ubuntu named[2750]: SERVFAIL unexpected RCODE resolving './NS/IN': 198.97.190.53#53
+Oct 23 07:19:10 ubuntu named[2750]: SERVFAIL unexpected RCODE resolving './NS/IN': 199.7.83.42#53
+Oct 23 07:19:10 ubuntu named[2750]: SERVFAIL unexpected RCODE resolving './NS/IN': 192.5.5.241#53
+Oct 23 07:19:10 ubuntu named[2750]: SERVFAIL unexpected RCODE resolving './NS/IN': 193.0.14.129#53
+Oct 23 07:19:10 ubuntu named[2750]: SERVFAIL unexpected RCODE resolving './NS/IN': 192.203.230.10#53
+Oct 23 07:19:10 ubuntu named[2750]: SERVFAIL unexpected RCODE resolving './NS/IN': 202.12.27.33#53
+Oct 23 07:19:10 ubuntu named[2750]: network unreachable resolving './NS/IN': 2001:500:12::d0d#53
+Oct 23 07:19:10 ubuntu named[2750]: [0;1;39m[0;1;31m[0;1;39mresolver priming query complete: failure[0m
+[?2004h[01;32mroot@ubuntu[00m:[01;34m~[00m$ [K[7mpython3 /root/grading/check_lab.py --group lab01 --phase build[27m[01;32mroot@ubuntu[00m:[01;34m~[00m$ python3 /root/grading/check_lab.py --group lab01 --phase build
+[?2004l  [   2/2 ] C4   named-checkconf -z clean; named-checkzone clean
+  [   2/2 ] C5   dhcpd -t clean; service running
+  [   0/2 ] C1   client cannot reach named at 192.168.19.10 (timeout/no status). Check listen-on, allow-query, firewall, and that it serves on lan0.
+  [ 0.0/3 ] C2   ns1 expected 192.168.19.10 got nothing; www expected 192.168.19.20 got nothing; mail expected 192.168.19.30 got nothing; api expected 192.168.19.40 got nothing
+  [   0/2 ] C3   reverse lookup of 192.168.19.10 did not return ns1 (got nothing). Check the reverse zone and its PTR.
+  [   3/3 ] C6   client obtained a lease: 192.168.19.104
+  [ 2.0/2 ] C7   pool+netmask correct
+  [   2/2 ] C8   gateway advertised correctly
+  [   0/3 ] C9   DHCP advertises 8.8.8.8, expected the company DNS 192.168.19.10 -- this is the integration the whole project is about
+  [   1/1 ] C10  company domain advertised
+  [   0/3 ] C11  using the leased resolver 8.8.8.8, www did not resolve to 192.168.19.20 (got nothing). If the leased resolver is a public one, that is the integration bug.
+  --------------------------------------------------
+  TOTAL: 12.0 / 25
+[?2004h[01;32mroot@ubuntu[00m:[01;34m~[00m$ [K[7miptables -D INPUT -p udp --dport 53 -j DROP[27m[01;32mroot@ubuntu[00m:[01;34m~[00m$ iptables -D INPUT -p udp --dport 53 -j DROP
+[?2004l[?2004h[01;32mroot@ubuntu[00m:[01;34m~[00m$ [K[7miptables -vnL INPUT --line-numbers[27miptables -vnL INPUT --line-numbers
+[?2004lChain INPUT (policy ACCEPT 893 packets, 60862 bytes)
+num   pkts bytes target     prot opt in     out     source               destination         
+[?2004h[01;32mroot@ubuntu[00m:[01;34m~[00m$ [K[7mpython3 /root/grading/check_lab.py --group lab01 --phase build[27m[01;32mroot@ubuntu[00m:[01;34m~[00m$ python3 /root/grading/check_lab.py --group lab01 --phase build
+[?2004l  [   2/2 ] C4   named-checkconf -z clean; named-checkzone clean
+  [   2/2 ] C5   dhcpd -t clean; service running
+  [   2/2 ] C1   named is authoritative for novapeak.lab and reachable from the client.
+  [2.25/3 ] C2   api expected 192.168.19.40 got ['192.168.19.1']
+  [   2/2 ] C3   reverse lookup of 192.168.19.10 returns ns1.
+  [   3/3 ] C6   client obtained a lease: 192.168.19.104
+  [ 2.0/2 ] C7   pool+netmask correct
+  [   2/2 ] C8   gateway advertised correctly
+  [   0/3 ] C9   DHCP advertises 8.8.8.8, expected the company DNS 192.168.19.10 -- this is the integration the whole project is about
+  [   1/1 ] C10  company domain advertised
+  [   0/3 ] C11  using the leased resolver 8.8.8.8, www did not resolve to 192.168.19.20 (got nothing). If the leased resolver is a public one, that is the integration bug.
+  --------------------------------------------------
+  TOTAL: 18.25 / 25
+[?2004h[01;32mroot@ubuntu[00m:[01;34m~[00m$ [K[7mnano /etc/bind/db.novapeak.lab[27mnano /etc/bind/db.novapeak.lab
+[?2004l[?2004h[?1049h[22;0;0t[1;36r(B[m[4l[?7h[39;49m[?1h=[?1h=[?25l[39;49m(B[m[H[2J[34;66H(B[0;7m[ Reading... ](B[m[34;65H(B[0;7m[ Read 7 lines ](B[m[H(B[0;7m  GNU nano 7.2 [47b/etc/bind/db.novapeak.lab [56b [1;144H(B[m[35d(B[0;7m^G(B[m Help[35;17H(B[0;7m^O(B[m Write Out    (B[0;7m^W(B[m Where Is     (B[0;7m^K(B[m Cut[35;65H(B[0;7m^T(B[m Execute[81G(B[0;7m^C(B[m Location     (B[0;7mM-U(B[m Undo[35;113H(B[0;7mM-A(B[m Set Mark    (B[0;7mM-](B[m To Bracket[36d(B[0;7m^X(B[m Exit[36;17H(B[0;7m^R(B[m Read File    (B[0;7m^\(B[m Replace[49G(B[0;7m^U(B[m Paste[36;65H(B[0;7m^J(B[m Justify[81G(B[0;7m^/(B[m Go To Line   (B[0;7mM-E(B[m Redo[36;113H(B[0;7mM-6(B[m Copy[36;129H(B[0;7m^Q(B[m Where Was[2d$TTL 3600[3d@ IN SOA ns1.novapeak.lab. admin.novapeak.lab. ( 2024010101 3600 1800 604800 3600 )[4d@ IN NS ns1.novapeak.lab.[5dns1 IN A 192.168.19.10[6dwww IN A 192.168.19.20[7dmail IN A 192.168.19.30[8dapi IN A 192.168.19.1[2d[?12l[?25h[?25l[?12l[?25h[3d[?25l[?12l[?25h[4d[?25l[?12l[?25h[5d[?25l[?12l[?25h[6d[?25l[?12l[?25h[7d[?25l[?12l[?25h[8d[?25l[?12l[?25h[9d[?25l[?12l[?25h[A[?25l[?12l[?25ha[?25l[?12l[?25hp[?25l[?12l[?25hi[?25l[?12l[?25h [?25l[?12l[?25hI[?25l[34d[K[?12l[?25h[8;16H[?25l[?12l[?25h8[?25l[?12l[?25h.[?25l[?12l[?25h1[?25l[?12l[?25h9[?25l[?12l[?25h.[?25l[?12l[?25h1[?25l[?12l[?25h[9d[?25l[?12l[?25h[?25l[?12l[?25h[?25l[?12l[?25h[?25l[?12l[?25h[?25l[?12l[?25h[?25l[?12l[?25h[8;22H[?25l[1;89H(B[0;7m*[144G(B[m[?12l[?25h[8;21H [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h[K[?25l[?12l[?25h [?25l[?12l[?25h[?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h[K[?25lapi IN A 192.168.19.40[?12l[?25h[?25l[35;17H[20X[35;37H(B[0;7mM-D(B[m DOS Format    [35;65H [7b(B[0;7mM-A(B[m Append[26X[35;109H(B[0;7mM-B(B[m Backup File[K[36;2H(B[0;7mC(B[m Cancel[17G[20X[36;37H(B[0;7mM-M(B[m Mac Format      [36;65H [7b(B[0;7mM-P(B[m Prepend[25X[36;109H(B[0;7m^T(B[m Browse[K[34d(B[0;7mFile Name to Write: /etc/bind/db.novapeak.lab [98b [34;46H(B[m[?12l[?25h[?25l[34;65H[1K (B[0;7m[ Writing... ](B[m[K[1;89H(B[0;7m [144G(B[m[34;65H(B[0;7m[ Wrote 7 lines ](B[m[35;17H(B[0;7m^O(B[m Write Out    (B[0;7m^W(B[m Where Is     (B[0;7m^K(B[m Cut[35;65H(B[0;7m^T(B[m Execute      (B[0;7m^C(B[m Location     (B[0;7mM-U(B[m Undo [7b(B[0;7mM-A(B[m Set Mark    (B[0;7mM-](B[m To Bracket[36;2H(B[0;7mX(B[m Exit  [17G(B[0;7m^R(B[m Read File    (B[0;7m^\(B[m Replace      (B[0;7m^U(B[m Paste[36;65H(B[0;7m^J(B[m Justify      (B[0;7m^/(B[m Go To Line   (B[0;7mM-E(B[m Redo [7b(B[0;7mM-6(B[m Copy[36;129H(B[0;7m^Q(B[m Where Was[?12l[?25h[8;23H[?25l[34d[J[36d[?12l[?25h[36;1H[?1049l[23;0;0t[?1l>[?2004l[?2004h[01;32mroot@ubuntu[00m:[01;34m~[00m$ [K[7mnamed-checkzone novapeak.lab /etc/bind/db.novapeak.lab[27m[01;32mroot@ubuntu[00m:[01;34m~[00m$ named-checkzone novapeak.lab /etc/bind/db.novapeak.lab
+[?2004lzone novapeak.lab/IN: loaded serial 2024010101
+OK
+[?2004h[01;32mroot@ubuntu[00m:[01;34m~[00m$ [K[7mnamed-checkconf -z[27mnamed-checkconf -z
+[?2004lzone novapeak.lab/IN: loaded serial 2024010101
+zone 19.168.192.in-addr.arpa/IN: loaded serial 2024010101
+zone localhost/IN: loaded serial 2
+zone 127.in-addr.arpa/IN: loaded serial 1
+zone 0.in-addr.arpa/IN: loaded serial 1
+zone 255.in-addr.arpa/IN: loaded serial 1
+[?2004h[01;32mroot@ubuntu[00m:[01;34m~[00m$ [7msystemctl restart named[27msystemctl restart named
+[?2004l[?2004h[01;32mroot@ubuntu[00m:[01;34m~[00m$ [7mdig @192.168.19.10 api.novapeak.lab +short[27mdig @192.168.19.10 api.novapeak.lab +short
+[?2004l192.168.19.40
+[?2004h[01;32mroot@ubuntu[00m:[01;34m~[00m$ [K[7mpython3 /root/grading/check_lab.py --group lab01 --phase build[27m[01;32mroot@ubuntu[00m:[01;34m~[00m$ python3 /root/grading/check_lab.py --group lab01 --phase build
+[?2004l  [   2/2 ] C4   named-checkconf -z clean; named-checkzone clean
+  [   2/2 ] C5   dhcpd -t clean; service running
+  [   2/2 ] C1   named is authoritative for novapeak.lab and reachable from the client.
+  [ 3.0/3 ] C2   all four A records correct
+  [   2/2 ] C3   reverse lookup of 192.168.19.10 returns ns1.
+  [   3/3 ] C6   client obtained a lease: 192.168.19.104
+  [ 2.0/2 ] C7   pool+netmask correct
+  [   2/2 ] C8   gateway advertised correctly
+  [   0/3 ] C9   DHCP advertises 8.8.8.8, expected the company DNS 192.168.19.10 -- this is the integration the whole project is about
+  [   1/1 ] C10  company domain advertised
+  [   0/3 ] C11  using the leased resolver 8.8.8.8, www did not resolve to 192.168.19.20 (got nothing). If the leased resolver is a public one, that is the integration bug.
+  --------------------------------------------------
+  TOTAL: 19.0 / 25
+[?2004h[01;32mroot@ubuntu[00m:[01;34m~[00m$ [K[7mnano /etc/dhcp/dhcpd.conf[27mnano /etc/dhcp/dhcpd.conf
+[?2004l[?2004h[?1049h[22;0;0t[1;36r(B[m[4l[?7h[39;49m[?1h=[?1h=[?25l[39;49m(B[m[H[2J[34;66H(B[0;7m[ Reading... ](B[m[34;65H(B[0;7m[ Read 9 lines ](B[m[H(B[0;7m  GNU nano 7.2 [50b/etc/dhcp/dhcpd.conf [58b [1;144H(B[m[35d(B[0;7m^G(B[m Help[35;17H(B[0;7m^O(B[m Write Out    (B[0;7m^W(B[m Where Is     (B[0;7m^K(B[m Cut[35;65H(B[0;7m^T(B[m Execute[81G(B[0;7m^C(B[m Location     (B[0;7mM-U(B[m Undo[35;113H(B[0;7mM-A(B[m Set Mark    (B[0;7mM-](B[m To Bracket[36d(B[0;7m^X(B[m Exit[36;17H(B[0;7m^R(B[m Read File    (B[0;7m^\(B[m Replace[49G(B[0;7m^U(B[m Paste[36;65H(B[0;7m^J(B[m Justify[81G(B[0;7m^/(B[m Go To Line   (B[0;7mM-E(B[m Redo[36;113H(B[0;7mM-6(B[m Copy[36;129H(B[0;7m^Q(B[m Where Was[2doption domain-name "novapeak.lab";[3ddefault-lease-time 3600;[4dmax-lease-time 7200;[6dsubnet 192.168.19.0 netmask 255.255.255.0 {[7;8H[38;5;208m[1K [39m(B[mrange 192.168.19.104 192.168.19.144;[8;8H[38;5;208m[1K [39m(B[moption routers 192.168.19.1;[9;8H[38;5;208m[1K [39m(B[moption domain-name-servers 8.8.8.8;[10d}[2d[?12l[?25h[?25l[?12l[?25h[3d[?25l[?12l[?25h[4d[?25l[?12l[?25h[5d[?25l[?12l[?25h[6d[?25l[?12l[?25h[7d[?25l[?12l[?25h[8d[?25l[?12l[?25h[9d[?25l[?12l[?25h[9;9H[?25l[?12l[?25ho[?25l[?12l[?25hp[?25l[?12l[?25ht[?25l[?12l[?25hi[?25l[?12l[?25ho[?25l[?12l[?25hn[?25l[?12l[?25h [?25l[?12l[?25hd[?25l[?12l[?25ho[?25l[?12l[?25hm[?25l[?12l[?25ha[?25l[34d[K[?12l[?25h[9;21H[?25l[?12l[?25hn[?25l[?12l[?25h-[?25l[?12l[?25hn[?25l[?12l[?25ha[?25l[?12l[?25hm[?25l[?12l[?25he[?25l[?12l[?25h-[?25l[?12l[?25hs[?25l[?12l[?25he[?25l[?12l[?25hr[?25l[?12l[?25hv[?25l[?12l[?25he[?25l[?12l[?25hr[?25l[?12l[?25hs[?25l[?12l[?25h [?25l[?12l[?25h8[?25l[?12l[?25h.[?25l[?12l[?25h8[?25l[?12l[?25h.[?25l[?12l[?25h8[?25l[?12l[?25h.[?25l[?12l[?25h8[?25l[?12l[?25h;[?25l[1;87H(B[0;7m*[144G(B[m[?12l[?25h[9;43H [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h[?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h[19G[K[?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h[?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h[K[?25l[?12l[?25h[10d[?25l[?12l[?25h[A[?25l[?12l[?25h[10d[?25l[?12l[?25h[A[?25l[?12l[?25h[A[?25l[?12l[?25h[8;9H[?25l[?12l[?25ho[?25l[?12l[?25hpt[?25l[?12l[?25hi[?25l[?12l[?25ho[?25l[?12l[?25hn[?25l[?12l[?25h [?25l[?12l[?25hr[?25l[?12l[?25ho[?25l[?12l[?25hu[?25l[?12l[?25ht[?25l[?12l[?25he[?25l[?12l[?25hr[?25l[?12l[?25hs[?25l[?12l[?25h [?25l[?12l[?25h1[?25l[?12l[?25h9[?25l[?12l[?25h2[?25l[?12l[?25h.[?25l[?12l[?25h[9d[?25l[?12l[?25h[10d[?25l[?12l[?25h}[?25l[?12l[?25h[11d[?25l[?12l[?25h[?25l[?12l[?25h[?25l[?12l[?25h[A[?25l[?12l[?25h[A[?25l[?12l[?25h[A[?25l[?12l[?25h[8;9H[?25l[?12l[?25ho[?25l[?12l[?25hp[?25l[?12l[?25ht[?25l[?12l[?25hi[?25l[?12l[?25ho[?25l[?12l[?25hn[?25l[?12l[?25h [?25l[?12l[?25hr[?25l[?12l[?25ho[?25l[?12l[?25hu[?25l[?12l[?25ht[?25l[?12l[?25he[?25l[?12l[?25hr[?25l[?12l[?25hs[?25l[?12l[?25h [?25l[?12l[?25h1[?25l[?12l[?25h9[?25l[?12l[?25h2[?25l[?12l[?25h.[?25l[?12l[?25h1[?25l[?12l[?25h6[?25l[?12l[?25h8[?25l[?12l[?25h.[?25l[?12l[?25h1[?25l[?12l[?25h9[?25l[?12l[?25h.[?25l[?12l[?25h1[?25l[?12l[?25h;[?25l7[9;34r8[9dM[1;36r[9;1H[?12l[?25h[?25l[9;34r[34;1H
+[1;36r[8;37H[?12l[?25h[?25l[?12l[?25h[9d[?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h [?25l[?12l[?25h[?25loption domain-name-servers 192.168.19.10;[?12l[?25h[?25l[35;17H[20X[35;37H(B[0;7mM-D(B[m DOS Format    [35;65H [7b(B[0;7mM-A(B[m Append[26X[35;109H(B[0;7mM-B(B[m Backup File[K[36;2H(B[0;7mC(B[m Cancel[17G[20X[36;37H(B[0;7mM-M(B[m Mac Format      [36;65H [7b(B[0;7mM-P(B[m Prepend[25X[36;109H(B[0;7m^T(B[m Browse[K[34d(B[0;7mFile Name to Write: /etc/dhcp/dhcpd.conf [103b [34;41H(B[m[?12l[?25h[?25l[34;65H[1K (B[0;7m[ Writing... ](B[m[K[1;87H(B[0;7m [144G(B[m[34;65H(B[0;7m[ Wrote 9 lines ](B[m[35;17H(B[0;7m^O(B[m Write Out    (B[0;7m^W(B[m Where Is     (B[0;7m^K(B[m Cut[35;65H(B[0;7m^T(B[m Execute      (B[0;7m^C(B[m Location     (B[0;7mM-U(B[m Undo [7b(B[0;7mM-A(B[m Set Mark    (B[0;7mM-](B[m To Bracket[36;2H(B[0;7mX(B[m Exit  [17G(B[0;7m^R(B[m Read File    (B[0;7m^\(B[m Replace      (B[0;7m^U(B[m Paste[36;65H(B[0;7m^J(B[m Justify      (B[0;7m^/(B[m Go To Line   (B[0;7mM-E(B[m Redo [7b(B[0;7mM-6(B[m Copy[36;129H(B[0;7m^Q(B[m Where Was[?12l[?25h[9;50H[?25l[34d[J[36d[?12l[?25h[36;1H[?1049l[23;0;0t[?1l>[?2004l[?2004h[01;32mroot@ubuntu[00m:[01;34m~[00m$ [7mdhcpd -t -cf /etc/dhcp/dhcpd.conf[27mdhcpd -t -cf /etc/dhcp/dhcpd.conf
+[?2004lInternet Systems Consortium DHCP Server 4.4.3-P1
+Copyright 2004-2022 Internet Systems Consortium.
+All rights reserved.
+For info, please visit https://www.isc.org/software/dhcp/
+Config file: /etc/dhcp/dhcpd.conf
+Database file: /var/lib/dhcp/dhcpd.leases
+PID file: /var/run/dhcpd.pid
+[?2004h[01;32mroot@ubuntu[00m:[01;34m~[00m$ [K[7msystemctl restart isc-dhcp-server[27msystemctl restart isc-dhcp-server
+[?2004l[?2004h[01;32mroot@ubuntu[00m:[01;34m~[00m$ [K[7msystemctl status isc-dhcp-server --no-pager[27m[01;32mroot@ubuntu[00m:[01;34m~[00m$ systemctl status isc-dhcp-server --no-pager
+[?2004l[0;1;32m●[0m isc-dhcp-server.service - ISC DHCP IPv4 server
+     Loaded: loaded (]8;;file://ubuntu/usr/lib/systemd/system/isc-dhcp-server.service/usr/lib/systemd/system/isc-dhcp-server.service]8;;; [0;1;32menabled[0m; preset: [0;1;32menabled[0m)
+     Active: [0;1;32mactive (running)[0m since Fri 2026-10-23 07:23:36 UTC; 7s ago
+       Docs: ]8;;man:dhcpd(8)man:dhcpd(8)]8;;
+   Main PID: 3130 (dhcpd)
+      Tasks: 1 (limit: 2237)
+     Memory: 3.7M (peak: 4.0M)
+        CPU: 14ms
+     CGroup: /system.slice/isc-dhcp-server.service
+             └─[0;38;5;245m3130 dhcpd -user dhcpd -group dhcpd -f -4 -pf /run/dhcp-server/dhcpd.pid -cf /etc/dhcp/dhcpd.conf lan0[0m
+
+Oct 23 07:23:36 ubuntu sh[3130]: Wrote 1 leases to leases file.
+Oct 23 07:23:36 ubuntu dhcpd[3130]: PID file: /run/dhcp-server/dhcpd.pid
+Oct 23 07:23:36 ubuntu dhcpd[3130]: Wrote 1 leases to leases file.
+Oct 23 07:23:36 ubuntu dhcpd[3130]: Listening on LPF/lan0/22:c5:ba:ee:85:23/192.168.19.0/24
+Oct 23 07:23:36 ubuntu sh[3130]: Listening on LPF/lan0/22:c5:ba:ee:85:23/192.168.19.0/24
+Oct 23 07:23:36 ubuntu sh[3130]: Sending on   LPF/lan0/22:c5:ba:ee:85:23/192.168.19.0/24
+Oct 23 07:23:36 ubuntu sh[3130]: Sending on   Socket/fallback/fallback-net
+Oct 23 07:23:36 ubuntu dhcpd[3130]: Sending on   LPF/lan0/22:c5:ba:ee:85:23/192.168.19.0/24
+Oct 23 07:23:36 ubuntu dhcpd[3130]: Sending on   Socket/fallback/fallback-net
+Oct 23 07:23:36 ubuntu dhcpd[3130]: Server starting service.
+[?2004h[01;32mroot@ubuntu[00m:[01;34m~[00m$ [K[7mpython3 /root/grading/check_lab.py --group lab01 --phase build[27m[01;32mroot@ubuntu[00m:[01;34m~[00m$ python3 /root/grading/check_lab.py --group lab01 --phase build
+[?2004l  [   2/2 ] C4   named-checkconf -z clean; named-checkzone clean
+  [   2/2 ] C5   dhcpd -t clean; service running
+  [   2/2 ] C1   named is authoritative for novapeak.lab and reachable from the client.
+  [ 3.0/3 ] C2   all four A records correct
+  [   2/2 ] C3   reverse lookup of 192.168.19.10 returns ns1.
+  [   3/3 ] C6   client obtained a lease: 192.168.19.104
+  [ 2.0/2 ] C7   pool+netmask correct
+  [   2/2 ] C8   gateway advertised correctly
+  [   3/3 ] C9   DHCP advertises the company DNS (192.168.19.10)
+  [   1/1 ] C10  company domain advertised
+  [   3/3 ] C11  client resolves www via the leased resolver
+  --------------------------------------------------
+  TOTAL: 25.0 / 25
+[?2004h[01;32mroot@ubuntu[00m:[01;34m~[00m$ [K[K[01;32mroot@ubuntu[00m:[01;34m~[00m$ [K[01;32mroot@ubuntu[00m:[01;34m~[00m$ [7mgit config --global user.name "Your Name"[27mgit config --global user.name "Your Name"[1P"[1P"[1P"[1P"[1P"[1P"[1P"[1P"i"[1P"o"l"l"i"e"[1P"[1P"[1P"[1P"l"l"a"Y"o"l"l"i"e"[1P"
+[?2004l[?2004h[01;32mroot@ubuntu[00m:[01;34m~[00m$ [K[7mgit config --global user.email "your-github-email@example.com"[27m[01;32mroot@ubuntu[00m:[01;34m~[00m$ git config --global user.email "your-github-email@example.com"[1P"[1P"[1P"[1P"[1P"[1P"[1P"[1P"[1P"[1P"[1P"[1P"[1P"[1P"[1P"[1P"[1P"[1P"[1P"[1P"[1P"[1P"[1P"[1P"[1P"[1P"[1P"[1P"[1P"[7m6705140007@siam.edu [27m"6705140007@siam.edu 
+[?2004l[?2004h[01;32mroot@ubuntu[00m:[01;34m~[00m$ [K[7mgit config --global --list[27mgit config --global --list
+[?2004l[?1h=user.name=YollaYolli[m
+user.email=6705140007@siam.edu [m
+[K[?1l>[?2004h[01;32mroot@ubuntu[00m:[01;34m~[00m$ [7mgit --version[27mgit --version
+[?2004lgit version 2.43.0
+[?2004h[01;32mroot@ubuntu[00m:[01;34m~[00m$ [7mcd /root[27mcd /root
+[?2004l[?2004h[01;32mroot@ubuntu[00m:[01;34m~[00m$ git clone [7mhttps://github.com/lelouchlynx/server-os-midterm-urban[27m[01;32mroot@ubuntu[00m:[01;34m~[00m$ git clone https://github.com/lelouchlynx/server-os-midterm-urban.git
+[?2004lCloning into 'server-os-midterm-urban'...
+remote: Enumerating objects: 58, done.[K
+remote: Counting objects:   1% (1/58)[Kremote: Counting objects:   3% (2/58)[Kremote: Counting objects:   5% (3/58)[Kremote: Counting objects:   6% (4/58)[Kremote: Counting objects:   8% (5/58)[Kremote: Counting objects:  10% (6/58)[Kremote: Counting objects:  12% (7/58)[Kremote: Counting objects:  13% (8/58)[Kremote: Counting objects:  15% (9/58)[Kremote: Counting objects:  17% (10/58)[Kremote: Counting objects:  18% (11/58)[Kremote: Counting objects:  20% (12/58)[Kremote: Counting objects:  22% (13/58)[Kremote: Counting objects:  24% (14/58)[Kremote: Counting objects:  25% (15/58)[Kremote: Counting objects:  27% (16/58)[Kremote: Counting objects:  29% (17/58)[Kremote: Counting objects:  31% (18/58)[Kremote: Counting objects:  32% (19/58)[Kremote: Counting objects:  34% (20/58)[Kremote: Counting objects:  36% (21/58)[Kremote: Counting objects:  37% (22/58)[Kremote: Counting objects:  39% (23/58)[Kremote: Counting objects:  41% (24/58)[Kremote: Counting objects:  43% (25/58)[Kremote: Counting objects:  44% (26/58)[Kremote: Counting objects:  46% (27/58)[Kremote: Counting objects:  48% (28/58)[Kremote: Counting objects:  50% (29/58)[Kremote: Counting objects:  51% (30/58)[Kremote: Counting objects:  53% (31/58)[Kremote: Counting objects:  55% (32/58)[Kremote: Counting objects:  56% (33/58)[Kremote: Counting objects:  58% (34/58)[Kremote: Counting objects:  60% (35/58)[Kremote: Counting objects:  62% (36/58)[Kremote: Counting objects:  63% (37/58)[Kremote: Counting objects:  65% (38/58)[Kremote: Counting objects:  67% (39/58)[Kremote: Counting objects:  68% (40/58)[Kremote: Counting objects:  70% (41/58)[Kremote: Counting objects:  72% (42/58)[Kremote: Counting objects:  74% (43/58)[Kremote: Counting objects:  75% (44/58)[Kremote: Counting objects:  77% (45/58)[Kremote: Counting objects:  79% (46/58)[Kremote: Counting objects:  81% (47/58)[Kremote: Counting objects:  82% (48/58)[Kremote: Counting objects:  84% (49/58)[Kremote: Counting objects:  86% (50/58)[Kremote: Counting objects:  87% (51/58)[Kremote: Counting objects:  89% (52/58)[Kremote: Counting objects:  91% (53/58)[Kremote: Counting objects:  93% (54/58)[Kremote: Counting objects:  94% (55/58)[Kremote: Counting objects:  96% (56/58)[Kremote: Counting objects:  98% (57/58)[Kremote: Counting objects: 100% (58/58)[Kremote: Counting objects: 100% (58/58), done.[K
+remote: Compressing objects:   2% (1/45)[Kremote: Compressing objects:   4% (2/45)[Kremote: Compressing objects:   6% (3/45)[Kremote: Compressing objects:   8% (4/45)[Kremote: Compressing objects:  11% (5/45)[Kremote: Compressing objects:  13% (6/45)[Kremote: Compressing objects:  15% (7/45)[Kremote: Compressing objects:  17% (8/45)[Kremote: Compressing objects:  20% (9/45)[Kremote: Compressing objects:  22% (10/45)[Kremote: Compressing objects:  24% (11/45)[Kremote: Compressing objects:  26% (12/45)[Kremote: Compressing objects:  28% (13/45)[Kremote: Compressing objects:  31% (14/45)[Kremote: Compressing objects:  33% (15/45)[Kremote: Compressing objects:  35% (16/45)[Kremote: Compressing objects:  37% (17/45)[Kremote: Compressing objects:  40% (18/45)[Kremote: Compressing objects:  42% (19/45)[Kremote: Compressing objects:  44% (20/45)[Kremote: Compressing objects:  46% (21/45)[Kremote: Compressing objects:  48% (22/45)[Kremote: Compressing objects:  51% (23/45)[Kremote: Compressing objects:  53% (24/45)[Kremote: Compressing objects:  55% (25/45)[Kremote: Compressing objects:  57% (26/45)[Kremote: Compressing objects:  60% (27/45)[Kremote: Compressing objects:  62% (28/45)[Kremote: Compressing objects:  64% (29/45)[Kremote: Compressing objects:  66% (30/45)[Kremote: Compressing objects:  68% (31/45)[Kremote: Compressing objects:  71% (32/45)[Kremote: Compressing objects:  73% (33/45)[Kremote: Compressing objects:  75% (34/45)[Kremote: Compressing objects:  77% (35/45)[Kremote: Compressing objects:  80% (36/45)[Kremote: Compressing objects:  82% (37/45)[Kremote: Compressing objects:  84% (38/45)[Kremote: Compressing objects:  86% (39/45)[Kremote: Compressing objects:  88% (40/45)[Kremote: Compressing objects:  91% (41/45)[Kremote: Compressing objects:  93% (42/45)[Kremote: Compressing objects:  95% (43/45)[Kremote: Compressing objects:  97% (44/45)[Kremote: Compressing objects: 100% (45/45)[Kremote: Compressing objects: 100% (45/45), done.[K
+remote: Total 58 (delta 27), reused 33 (delta 10), pack-reused 0 (from 0)[K
+Receiving objects:   1% (1/58)Receiving objects:   3% (2/58)Receiving objects:   5% (3/58)Receiving objects:   6% (4/58)Receiving objects:   8% (5/58)Receiving objects:  10% (6/58)Receiving objects:  12% (7/58)Receiving objects:  13% (8/58)Receiving objects:  15% (9/58)Receiving objects:  17% (10/58)Receiving objects:  18% (11/58)Receiving objects:  20% (12/58)Receiving objects:  22% (13/58)Receiving objects:  24% (14/58)Receiving objects:  25% (15/58)Receiving objects:  27% (16/58)Receiving objects:  29% (17/58)Receiving objects:  31% (18/58)Receiving objects:  32% (19/58)Receiving objects:  34% (20/58)Receiving objects:  36% (21/58)Receiving objects:  37% (22/58)Receiving objects:  39% (23/58)Receiving objects:  41% (24/58)Receiving objects:  43% (25/58)Receiving objects:  44% (26/58)Receiving objects:  46% (27/58)Receiving objects:  48% (28/58)Receiving objects:  50% (29/58)Receiving objects:  51% (30/58)Receiving objects:  53% (31/58)Receiving objects:  55% (32/58)Receiving objects:  56% (33/58)Receiving objects:  58% (34/58)Receiving objects:  60% (35/58)Receiving objects:  62% (36/58)Receiving objects:  63% (37/58)Receiving objects:  65% (38/58)Receiving objects:  67% (39/58)Receiving objects:  68% (40/58)Receiving objects:  70% (41/58)Receiving objects:  72% (42/58)Receiving objects:  74% (43/58)Receiving objects:  75% (44/58)Receiving objects:  77% (45/58)Receiving objects:  79% (46/58)Receiving objects:  81% (47/58)Receiving objects:  82% (48/58)Receiving objects:  84% (49/58)Receiving objects:  86% (50/58)Receiving objects:  87% (51/58)Receiving objects:  89% (52/58)Receiving objects:  91% (53/58)Receiving objects:  93% (54/58)Receiving objects:  94% (55/58)Receiving objects:  96% (56/58)Receiving objects:  98% (57/58)Receiving objects: 100% (58/58)Receiving objects: 100% (58/58), 10.22 KiB | 1.28 MiB/s, done.
+Resolving deltas:   0% (0/27)Resolving deltas:   3% (1/27)Resolving deltas:   7% (2/27)Resolving deltas:  11% (3/27)Resolving deltas:  14% (4/27)Resolving deltas:  18% (5/27)Resolving deltas:  22% (6/27)Resolving deltas:  25% (7/27)Resolving deltas:  29% (8/27)Resolving deltas:  33% (9/27)Resolving deltas:  37% (10/27)Resolving deltas:  40% (11/27)Resolving deltas:  44% (12/27)Resolving deltas:  48% (13/27)Resolving deltas:  51% (14/27)Resolving deltas:  55% (15/27)Resolving deltas:  59% (16/27)Resolving deltas:  62% (17/27)Resolving deltas:  66% (18/27)Resolving deltas:  70% (19/27)Resolving deltas:  74% (20/27)Resolving deltas:  77% (21/27)Resolving deltas:  81% (22/27)Resolving deltas:  85% (23/27)Resolving deltas:  88% (24/27)Resolving deltas:  92% (25/27)Resolving deltas:  96% (26/27)Resolving deltas: 100% (27/27)Resolving deltas: 100% (27/27), done.
+[?2004h[01;32mroot@ubuntu[00m:[01;34m~[00m$ [Kcd server-0 os         server-os-midtrem    erm-urban
+[?2004lbash: cd: server-os-miderm-urban: No such file or directory
+[?2004h[01;32mroot@ubuntu[00m:[01;34m~[00m$ ls
+[?2004l[0m[01;36mfilesystem[0m  [01;34mgrading[0m  [01;34mserver-os-midterm-urban[0m  session.log
+[?2004h[01;32mroot@ubuntu[00m:[01;34m~[00m$ lscd server-os-miderm-urbancd s[1@/
+[?2004lbash: cd: /server-os-miderm-urban: No such file or directory
+[?2004h[01;32mroot@ubuntu[00m:[01;34m~[00m$ cd server-os-midterm-urban
+[?2004l[?2004h[01;32mroot@ubuntu[00m:[01;34m~/server-os-midterm-urban[00m$ [7mgit status[27mgit status
+[?2004lOn branch main
+Your branch is up to date with 'origin/main'.
+
+nothing to commit, working tree clean
+[?2004h[01;32mroot@ubuntu[00m:[01;34m~/server-os-midterm-urban[00m$ [K[01;32mroot@ubuntu[00m:[01;34m~/server-os-midterm-urban[00m$ [7mgit remote -v[27mgit remote -v
+[?2004lorigin	https://github.com/lelouchlynx/server-os-midterm-urban.git (fetch)
+origin	https://github.com/lelouchlynx/server-os-midterm-urban.git (push)
+[?2004h[01;32mroot@ubuntu[00m:[01;34m~/server-os-midterm-urban[00m$ ls -la fixed-configs
+[?2004ltotal 24
+drwxr-xr-x 3 root root  4096 Oct 23 07:30  [0m[01;34m.[0m
+drwxr-xr-x 4 root root  4096 Oct 23 07:30  [01;34m..[0m
+-rw-r--r-- 1 root root 10244 Oct 23 07:30  .DS_Store
+-rw-r--r-- 1 root root     0 Oct 23 07:30  .gitkeep
+drwxr-xr-x 2 root root  4096 Oct 23 07:30 [01;34m"Nyi Sett's Folder"[0m
+[?2004h[01;32mroot@ubuntu[00m:[01;34m~/server-os-midterm-urban[00m$ ^?[K[K[01;32mroot@ubuntu[00m:[01;34m~/server-os-midterm-urban[00m$ [7mcp /etc/bind/named.conf.options fixed-configs/[27mcp /etc/bind/named.conf.options fixed-configs/
+[?2004l[?2004h[01;32mroot@ubuntu[00m:[01;34m~/server-os-midterm-urban[00m$ [K[7mcp /etc/bind/named.conf.local fixed-configs/[27mcp /etc/bind/named.conf.local fixed-configs/
+[?2004l[?2004h[01;32mroot@ubuntu[00m:[01;34m~/server-os-midterm-urban[00m$ [K[7mcp /etc/bind/db.novapeak.lab fixed-configs/[27mcp /etc/bind/db.novapeak.lab fixed-configs/
+[?2004l[?2004h[01;32mroot@ubuntu[00m:[01;34m~/server-os-midterm-urban[00m$ [K[7mcp /etc/bind/db.novapeak.lab.rev fixed-configs/[27mcp /etc/bind/db.novapeak.lab.rev fixed-configs/
+[?2004l[?2004h[01;32mroot@ubuntu[00m:[01;34m~/server-os-midterm-urban[00m$ [K[7mcp /etc/dhcp/dhcpd.conf fixed-configs/[27mcp /etc/dhcp/dhcpd.conf fixed-configs/
+[?2004l[?2004h[01;32mroot@ubuntu[00m:[01;34m~/server-os-midterm-urban[00m$ [K[7mcp /etc/default/isc-dhcp-server fixed-configs/[27mcp /etc/default/isc-dhcp-server fixed-configs/
+[?2004l[?2004h[01;32mroot@ubuntu[00m:[01;34m~/server-os-midterm-urban[00m$ [K[7mls -l fixed-configs/[27mls -l fixed-configs/
+[?2004ltotal 28
+drwxr-xr-x 2 root root 4096 Oct 23 07:30 [0m[01;34m"Nyi Sett's Folder"[0m
+-rw-r--r-- 1 root root  213 Oct 23 07:35  db.novapeak.lab
+-rw-r--r-- 1 root root  233 Oct 23 07:36  db.novapeak.lab.rev
+-rw-r--r-- 1 root root  246 Oct 23 07:36  dhcpd.conf
+-rw-r--r-- 1 root root   36 Oct 23 07:36  isc-dhcp-server
+-rw-r--r-- 1 root root  164 Oct 23 07:35  named.conf.local
+-rw-r--r-- 1 root root  102 Oct 23 07:35  named.conf.options
+[?2004h[01;32mroot@ubuntu[00m:[01;34m~/server-os-midterm-urban[00m$ [7mgit add fixed-configs/[27mgit add fixed-configs/
+[?2004l[?2004h[01;32mroot@ubuntu[00m:[01;34m~/server-os-midterm-urban[00m$ [7mgit commit -m "Add repaired OS midterm configurations"[27mgit commit -m "Add repaired OS midterm configurations""                                        "Add: killacoda configeration           figuration files"
+[?2004l[main b38e513] Add: killacoda cofiguration files
+ 6 files changed, 40 insertions(+)
+ create mode 100644 fixed-configs/db.novapeak.lab
+ create mode 100644 fixed-configs/db.novapeak.lab.rev
+ create mode 100644 fixed-configs/dhcpd.conf
+ create mode 100644 fixed-configs/isc-dhcp-server
+ create mode 100644 fixed-configs/named.conf.local
+ create mode 100644 fixed-configs/named.conf.options
+[?2004h[01;32mroot@ubuntu[00m:[01;34m~/server-os-midterm-urban[00m$ [Kgit committ -m                git ocmmit       mmi      commit --amend -m "Add: fixed configuration files from killercoda"
+[?2004l[main f9cad3d] Add: fixed configuration files from killercoda
+ Date: Fri Oct 23 07:37:53 2026 +0000
+ 6 files changed, 40 insertions(+)
+ create mode 100644 fixed-configs/db.novapeak.lab
+ create mode 100644 fixed-configs/db.novapeak.lab.rev
+ create mode 100644 fixed-configs/dhcpd.conf
+ create mode 100644 fixed-configs/isc-dhcp-server
+ create mode 100644 fixed-configs/named.conf.local
+ create mode 100644 fixed-configs/named.conf.options
+[?2004h[01;32mroot@ubuntu[00m:[01;34m~/server-os-midterm-urban[00m$ [K[7mgit push -u origin HEAD[27mgit push -u origin HEAD
+[?2004lUsername for 'https://github.com': Yoo lli  a laYolli
+Password for 'https://YollaYolli@github.com': 
+Enumerating objects: 11, done.
+Counting objects:   9% (1/11)Counting objects:  18% (2/11)Counting objects:  27% (3/11)Counting objects:  36% (4/11)Counting objects:  45% (5/11)Counting objects:  54% (6/11)Counting objects:  63% (7/11)Counting objects:  72% (8/11)Counting objects:  81% (9/11)Counting objects:  90% (10/11)Counting objects: 100% (11/11)Counting objects: 100% (11/11), done.
+Compressing objects:  12% (1/8)Compressing objects:  25% (2/8)Compressing objects:  37% (3/8)Compressing objects:  50% (4/8)Compressing objects:  62% (5/8)Compressing objects:  75% (6/8)Compressing objects:  87% (7/8)Compressing objects: 100% (8/8)Compressing objects: 100% (8/8), done.
+Writing objects:  11% (1/9)Writing objects:  22% (2/9)Writing objects:  33% (3/9)Writing objects:  44% (4/9)Writing objects:  55% (5/9)Writing objects:  66% (6/9)Writing objects:  77% (7/9)Writing objects:  88% (8/9)Writing objects: 100% (9/9)Writing objects: 100% (9/9), 1.21 KiB | 619.00 KiB/s, done.
+Total 9 (delta 1), reused 3 (delta 0), pack-reused 0
+remote: Resolving deltas:   0% (0/1)[Kremote: Resolving deltas: 100% (1/1)[Kremote: Resolving deltas: 100% (1/1), completed with 1 local object.[K
+To https://github.com/lelouchlynx/server-os-midterm-urban.git
+   e930830..f9cad3d  HEAD -> main
+branch 'main' set up to track 'origin/main'.
+[?2004h[01;32mroot@ubuntu[00m:[01;34m~/server-os-midterm-urban[00m$ exit
+[?2004lexit
+
+Script done on 2026-10-23 07:47:29+00:00 [COMMAND_EXIT_CODE="0"]

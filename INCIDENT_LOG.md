@@ -34,6 +34,8 @@ without evidence earns little. Copy this block for each fault.
   ```
   zone novapeak.lab/IN: loaded serial 2024010101
   zone 19.168.192.in-addr.arpa/IN: loaded serial 2024010101
+  
+  [   2/2 ] C4   named-checkconf -z clean; named-checkzone clean
   ```
 - **Found/proved by:** Nyi Sett
 

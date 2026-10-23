@@ -14,6 +14,8 @@ Nyi Sett (6705140078)
 | ChatGPT | Asked for initial diagnostic steps regarding why check_lab.py reported a network reachability timeout on C1. |
 | Gemini | Asked to analyze our BIND named.conf.options and iptables rule outputs to determine why reverse lookup (C3) and client queries failed.|
 | Claude | Asked to independently diagnose the C2 DNS fault, identify why the api A record returned the wrong IP address, and recommend a fix and verification commands. |
+| ChatGPT | Asked why DHCP was advertising 8.8.8.8 (C9) and preventing the client from resolving internal domain names like www (C11). |
+| Claude | Asked to verify the correct syntax for updating option domain-name-servers inside /etc/dhcp/dhcpd.conf to fix internal DNS integration. |
 
 (If you used no AI, write "None" and say how you worked instead.)
 

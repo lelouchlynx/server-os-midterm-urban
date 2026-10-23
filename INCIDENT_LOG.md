@@ -9,57 +9,20 @@ Members:
   - Nyi Sett (6705140078) — `Wha1e0134`
 Company / domain: novapeak.lab
 
-Fill in ONE entry per fault you found. Paste real command output -- an entry
-without evidence earns little. Copy this block for each fault.
+
 
 ---
 
-## Fault 1
+## Fault 1 — Incorrect Forward-Zone Filename (C4)
 
 - **Symptom (what we observed):**
   ```
   [ 1/2 ] C4 named-checkconf -z FAILED; named-checkzone clean
+    ...
+  TOTAL: 11.0 / 25
   ```
 - **Hypothesis (what we suspected and why):**
   BIND was using an incorrect DNS zone file path because named-checkconf -z failed while named-checkzone was clean. This suggested the zone file itself was valid but BIND could not load it through its configuration.
-- **Proof (the command that confirmed the cause):**
-  ```
-  [?2004h[01;32mroot@ubuntu[00m:[01;34m~[00m$ [7mnamed-checkconf -z[27mnamed-checkconf -z
-  [?2004lzone novapeak.lab/IN: loading from master file /etc/bind/db.MISSING failed: file not found
-  zone novapeak.lab/IN: not loaded due to errors.
-  ```
-- **Fix (what we changed):**
-  sed -i 's|/etc/bind/db.MISSING|/etc/bind/db.novapeak.lab|' /etc/bind/named.conf.local
-- **Confirmation (output showing it now works):**
-  ```
-  zone novapeak.lab/IN: loaded serial 2024010101
-  zone 19.168.192.in-addr.arpa/IN: loaded serial 2024010101
-  
-  [   2/2 ] C4   named-checkconf -z clean; named-checkzone clean
-  ```
-- **Found/proved by:** Nyi Sett
-
----
-
-## Fault 2 - DNS Reachability Blocked by Firewall Rule and Bad Zone File Reference (C1 & C3)
-
-- **Symptom (what we observed):**
-
-Running python3 /root/grading/check_lab.py --group lab01 --phase build failed both reachability (C1) and reverse lookup (C3), along with zone config verification (C4)
-
-  ```
-  [ 0/2 ] C1 client cannot reach named at 192.168.19.10 (timeout/no status). Check listen-on, allow-query, firewall, and that it serves on lan0.
-  [ 0/2 ] C3 reverse lookup of 192.168.19.10 did not return ns1 (got nothing). Check the reverse zone and its PTR.
-  ```
-  Running named-checkconf -z directly on the server outputted:
-
-- **Hypothesis (what we suspected and why):**
-  There were two underlying causes.
-
-    (1) BIND failed to load its zone database because /etc/bind/named.conf.local referenced a non-existent file (/etc/bind/db.MISSING) instead of the valid file in /etc/bind/.
-
-    (2) External queries timed out because an iptables firewall rule was dropping incoming UDP traffic on DNS port 53.
-
 - **Proof (the command that confirmed the cause):**
 First, we verified the file mismatch in /etc/bind/named.conf.local
 
@@ -69,49 +32,80 @@ First, we verified the file mismatch in /etc/bind/named.conf.local
         file "/etc/bind/db.MISSING";
       };
   ```
-Checking directory contents with ls -l /etc/bind/db.* showed the real forward zone file was /etc/bind/db.novapeak.lab.
+- **Fix (what we changed):**
+  ```
+  nano /etc/bind/named.conf.local
+  ```
+- **Confirmation (output showing it now works):**
+  ```
+  zone novapeak.lab/IN: loaded serial 2024010101
+  zone 19.168.192.in-addr.arpa/IN: loaded serial 2024010101
+  
+  [  2/2 ] C4   named-checkconf -z clean; named-checkzone clean
+    TOTAL: 12.0 / 25
+  ```
+- **Found/proved by:** Nyi Sett (6705140078) — `Wha1e0134`
 
-Second, we inspected kernel firewall rules using iptables -vnL INPUT --line-numbers
+---
+
+## Fault 2 — DNS Reachability Blocked by Firewall Rule (C1 & C3)
+
+- **Symptom (what we observed):**
+
+  After Fault 1 was corrected, the DNS zone configuration loaded successfully, but the client still could not reach the DNS server or complete the reverse lookup.
+
+  Running `python3 /root/grading/check_lab.py --group lab01 --phase build` produced:
+
+  ```
+  [ 0/2 ] C1 client cannot reach named at 192.168.19.10 (timeout/no status). Check listen-on, allow-query, firewall, and that it serves on lan0.
+  [ 0/2 ] C3 reverse lookup of 192.168.19.10 did not return ns1 (got nothing). Check the reverse zone and its PTR.
+    ...
+  TOTAL: 12.0 / 25
+  ```
+
+
+- **Hypothesis (what we suspected and why):**
+  We suspected that a firewall rule was blocking DNS requests from the client. The timeout reported by C1 suggested a reachability problem, which could also prevent the client from completing the reverse lookup tested by C3.
+
+- **Proof (the command that confirmed the cause):**
+We inspected the firewall rules using:
+
+  ```
+       iptables -vnL INPUT --line-numbers
+  ```
+The output showed a rule dropping incoming UDP traffic on DNS port 53:
 
   ```
     Chain INPUT (policy ACCEPT 498 packets, 33973 bytes)
-      num   pkts bytes target     prot opt in     out     source               destination          
-      1        0     0 DROP       17   --  *      *       0.0.0.0/0            0.0.0.0/0            udp dpt:53
+    num  pkts bytes target  prot opt in  out  source       destination
+    1    0    0     DROP    17   --  *   *    0.0.0.0/0    0.0.0.0/0    udp dpt:53
   ```
-Rule #1 explicitly dropped incoming UDP traffic on port 53 (prot 17), blocking all client network access to BIND.
+This rule provided evidence that incoming DNS queries over UDP were being dropped by the firewall.
 
 - **Fix (what we changed):**
-(1) Edited /etc/bind/named.conf.local using nano and changed file "/etc/bind/db.MISSING"; to file "/etc/bind/db.novapeak.lab";
-
-(2) Restarted BIND:
+We removed the blocking firewall rule:
 
   ```
-    systemctl restart named
+    iptables -D INPUT -p udp --dport 53 -j DROP
   ```
-(3) Deleted the blocking firewall rule:
+We then inspected the firewall rules again to confirm that the DROP rule had been removed.
 
   ```
    iptables -D INPUT -p udp --dport 53 -j DROP
   ```
 
 - **Confirmation (output showing it now works):**
-
-Running named-checkconf -z confirmed the zone loaded successfully
+After removing the firewall rule, we reran the checker:
   ```
-    zone novapeak.lab/IN: loaded serial 2024010101
-    zone 19.168.192.in-addr.arpa/IN: loaded serial 2024010101
-  ```
-
-Re-checking iptables -vnL INPUT --line-numbers verified the DROP rule was removed. Finally, running check_lab.py confirmed both C1 and C3 passed
-
-  ```
-   [ 2/2 ] C4 named-checkconf -z FAILED; named-checkzone clean.
    [ 2/2 ] C1 named is authoritative for novapeak.lab and reachable from the client.
    [ 2/2 ] C3 reverse lookup of 192.168.19.10 returns ns1.
+   TOTAL: 18.25 / 25
   ```
-- **Found/proved by:** Kyaw San
+These results confirmed that the client could reach the authoritative DNS server and that the reverse lookup worked. C4 remained passing from the previous fix.
 
-## Fault 3
+- **Found/proved by:** Kyaw San (6705140029) — `KyawSanAlpha`
+
+## Fault 3 — Incorrect API Host Address (C2)
 
 - **Symptom (what we observed):**
   ```
@@ -156,7 +150,7 @@ Re-checking iptables -vnL INPUT --line-numbers verified the DROP rule was remove
   TOTAL: 19.0 / 25
 
   ```
-- **Found/proved by:** Sai Wanna Htoo (`lelouchlynx`)
+- **Found/proved by:** Sai Wanna Htoo (6705140028) — `lelouchlynx`
 
 ---
 
@@ -169,6 +163,7 @@ Re-checking iptables -vnL INPUT --line-numbers verified the DROP rule was remove
     ```
     [ 0/3 ] C9 DHCP advertises 8.8.8.8, expected the company DNS 192.168.19.10 -- this is the integration the whole project is about
     [ 0/3 ] C11 using the leased resolver 8.8.8.8, www did not resolve to 192.168.19.20 (got nothing). If the leased resolver is a public one, that is the integration bug.
+    TOTAL: 19.0 / 25
     ```
 
 
@@ -187,7 +182,7 @@ Re-checking iptables -vnL INPUT --line-numbers verified the DROP rule was remove
 
     The setting option domain-name-servers 8.8.8.8; confirmed the integration bug.
 
-    Fix (what we changed):
+    **Fix (what we changed):**
 
     Edited /etc/dhcp/dhcpd.conf using nano and updated the DNS option line to
 
@@ -211,12 +206,12 @@ Re-checking iptables -vnL INPUT --line-numbers verified the DROP rule was remove
     ```
 
     Re-running python3 /root/grading/check_lab.py --group lab01 --phase build confirmed both C9 and C11 passed cleanly:
-    Plaintext
 
     ```
     [ 3/3 ] C9 DHCP advertises the company DNS (192.168.19.10)
     [ 3/3 ] C11 client resolves www via the leased resolver
+      TOTAL: 25.0 / 25
     ```
 
-  - **Found/proved by:** Aung Chan Myae
+  - **Found/proved by:** Aung Chan Myae (6705140035) — `Rowan10-uzzz`
 ---

@@ -13,6 +13,7 @@ Nyi Sett (6705140078)
 | ChatGPT | Asked to explain why named-checkconf -z failed while named-checkzone passed, and to help diagnose the DNS configuration problem.|
 | ChatGPT | Asked for initial diagnostic steps regarding why check_lab.py reported a network reachability timeout on C1. |
 | Gemini | Asked to analyze our BIND named.conf.options and iptables rule outputs to determine why reverse lookup (C3) and client queries failed.|
+| Claude | Asked to independently diagnose the C2 DNS fault, identify why the api A record returned the wrong IP address, and recommend a fix and verification commands. |
 
 (If you used no AI, write "None" and say how you worked instead.)
 

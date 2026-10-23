@@ -31,16 +31,15 @@ The main faults identified in our troubleshooting were:
 4. **C9 and C11 — DHCP advertised the wrong DNS resolver.** DHCP initially advertised `8.8.8.8`, not the company's DNS server at `192.168.19.10`. We corrected the DNS option in `/etc/dhcp/dhcpd.conf`, checked the DHCP syntax, restarted the service, and reran the checker. C9 and C11 then passed.
 
 ## Part 3c: Putting the AIs to the test
-We gave the following to at least two AI tools: <describe what you gave them>.
 
-| Fault (in our words) | We found it? | AI #1 (<name>) | AI #2 (<name>) | Was each AI actually right? |
-| --- | --- | --- | --- | --- |
-| | | | | |
-| | | | | |
+We asked AI tools about selected symptoms and configuration excerpts. The table below summarises the purpose of those consultations and evaluates the relevant advice against our recorded terminal evidence.
 
-For each AI suggestion that was WRONG or misleading, describe it and how you
-verified it was wrong:
-<notes>
+| Fault (in our words) | Did we find it through our own checks? | AI #1 summary | AI #2 summary | Was the advice actually right? |
+|---|---|---|---|---|
+| C4 — BIND referenced a missing zone file | Yes. named-checkconf -z identified `/etc/bind/db.MISSING`, and the real zone file was present under a different name. | ChatGPT helped explain why checking the zone file alone was not enough; BIND also had to load the correct file through its configuration. | No second-AI response for this particular fault was preserved in our notes. | The explanation was consistent with the error. The proof was the failed configuration check followed by a clean named-checkconf -z after we corrected the path. |
+| C1 and initial C3 — Client DNS queries timed out | Yes. We checked BIND's options and then inspected the firewall rules. | ChatGPT was used for diagnostic directions for the reachability timeout, including checking service configuration and possible network blocking. | Gemini was asked to interpret the BIND options and firewall output during the C1/C3 investigation. The full response was not retained, so we cannot reliably report its exact wording. | The live output showed a UDP port 53 DROP rule. After we removed it, C1 passed and C3 returned the expected ns1 PTR. These test results prove the fix worked; they do not by themselves prove which AI, if either, identified the exact rule first. |
+| C2 — api returned the gateway address | Yes. The checker showed 192.168.19.1 instead of `192.168.19.40`, and the forward zone contained the wrong address. | Claude was asked to diagnose the wrong A record and suggest verification commands. | No separate second-AI answer for this exact record was retained in our notes. | The corrected record was verified: dig @192.168.19.10 api.novapeak.lab +short returned `192.168.19.40`, and C2 later received full marks. Because the complete Claude answer was not saved, we cannot claim with certainty that Claude gave the exact correction we used. |
+| C9/C11 — DHCP supplied the public resolver | Yes. The checker explicitly reported 8.8.8.8 where 192.168.19.10 was expected. | ChatGPT helped explain why the advertised resolver mattered for clients resolving the company's internal names. | Claude was asked to check the syntax of the DHCP DNS option. | The final setting was correct and the configuration passed `dhcpd -t -cf /etc/dhcp/dhcpd.conf`. After restarting DHCP, the checker confirmed that C9 advertised 192.168.19.10 and C11 resolved www through the leased resolver. The checker confirms the resulting configuration, while the missing raw AI transcripts limit our ability to assess each tool's exact wording separately. |
 
 ## Part 3d: Verdict
 - Where our human diagnosis beat the AIs:

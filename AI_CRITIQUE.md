@@ -1,7 +1,12 @@
 # AI Usage and Critique
 
-Group: <name>   Members: <names>
+Group: Urban   
 
+Members: Toe Twel Tar Htut (6705140007)
+Sai Wanna Htoo (6705140028)
+Kyaw San (6705140029)
+Aung Chan Myae (6705140035)
+Nyi Sett (6705140078)
 ## Part 3a: Declaration (required)
 | AI tool | What we used it for |
 | --- | --- |

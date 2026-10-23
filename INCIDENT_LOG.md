@@ -117,20 +117,47 @@ Re-checking iptables -vnL INPUT --line-numbers verified the DROP rule was remove
 
 - **Symptom (what we observed):**
   ```
-  <paste the command and its output that showed something was wrong>
+    root@ubuntu:~# python3 /root/grading/check_lab.py --group lab01 --phase build
+   [2.25/3 ] C2 api expected 192.168.19.40 got ['192.168.19.1']
+  ...
+  TOTAL: 18.25 / 25
   ```
 - **Hypothesis (what we suspected and why):**
-  <your reasoning>
+  The `api` A record gives 192.168.19.1. That is the gateway address (`option routers 192.168.19.1`), not an API server. The reverse zone already maps host 40 to `api`, so the forward record is the wrong one.
 - **Proof (the command that confirmed the cause):**
   ```
-  <paste the command and output that proved it>
+    root@ubuntu:~# cat /etc/bind/db.novapeak.lab
+  $TTL 3600
+  @ IN SOA ns1.novapeak.lab. admin.novapeak.lab. ( 2024010101 3600 1800 604800 3600 )
+  @ IN NS ns1.novapeak.lab.
+  ns1 IN A 192.168.19.10
+  www IN A 192.168.19.20
+  mail IN A 192.168.19.30
+  api IN A 192.168.19.1
+  root@ubuntu:~# cat /etc/bind/db.novapeak.lab.rev
+  $TTL 3600
+  @ IN SOA ns1.novapeak.lab. admin.novapeak.lab. ( 2024010101 3600 1800 604800 3600 )
+  @ IN NS ns1.novapeak.lab.
+  10 IN PTR ns1.novapeak.lab.
+  20 IN PTR www.novapeak.lab.
+  30 IN PTR mail.novapeak.lab.
+  40 IN PTR api.novapeak.lab.
   ```
 - **Fix (what we changed):**
-  <the change>
+  In `/etc/bind/db.novapeak.lab` we changed `api IN A 192.168.19.1` to `api IN A 192.168.19.40`. Then we ran `named-checkzone`, `named-checkconf -z` and `systemctl restart named`.
 - **Confirmation (output showing it now works):**
   ```
-  <paste the corrected output>
+  root@ubuntu:~# named-checkzone novapeak.lab /etc/bind/db.novapeak.lab
+  zone novapeak.lab/IN: loaded serial 2024010101
+  OK
+  root@ubuntu:~# dig @192.168.19.10 api.novapeak.lab +short
+  192.168.19.40
+  root@ubuntu:~# python3 /root/grading/check_lab.py --group lab01 --phase build
+   [ 3.0/3 ] C2 all four A records correct
+  ...
+  TOTAL: 19.0 / 25
+
   ```
-- **Found/proved by:** <member name>
+- **Found/proved by:** Sai Wanna Htoo (`lelouchlynx`)
 
 ---

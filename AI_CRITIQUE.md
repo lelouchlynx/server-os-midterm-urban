@@ -10,7 +10,7 @@ Nyi Sett (6705140078)
 ## Part 3a: Declaration (required)
 | AI tool | What we used it for |
 | --- | --- |
-| | |
+| CHATGPT | Asked to explain why named-checkconf -z failed while named-checkzone passed, and to help diagnose the DNS configuration problem.|
 | | |
 
 (If you used no AI, write "None" and say how you worked instead.)

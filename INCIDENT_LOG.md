@@ -78,7 +78,6 @@ Second, we inspected kernel firewall rules using iptables -vnL INPUT --line-numb
     Chain INPUT (policy ACCEPT 498 packets, 33973 bytes)
       num   pkts bytes target     prot opt in     out     source               destination          
       1        0     0 DROP       17   --  *      *       0.0.0.0/0            0.0.0.0/0            udp dpt:53
-    };
   ```
 Rule #1 explicitly dropped incoming UDP traffic on port 53 (prot 17), blocking all client network access to BIND.
 

@@ -64,52 +64,52 @@ Running python3 /root/grading/check_lab.py --group lab01 --phase build failed bo
 - **Proof (the command that confirmed the cause):**
 First, we verified the file mismatch in /etc/bind/named.conf.local
 
-  ```
-  zone "novapeak.lab" {
+    ```
+       zone "novapeak.lab" {
         type master;
         file "/etc/bind/db.MISSING";
-};
-  ```
-  Checking directory contents with ls -l /etc/bind/db.* showed the real forward zone file was /etc/bind/db.novapeak.lab.
+      };
+    ```
+Checking directory contents with ls -l /etc/bind/db.* showed the real forward zone file was /etc/bind/db.novapeak.lab.
 
 Second, we inspected kernel firewall rules using iptables -vnL INPUT --line-numbers
 
-```
- Chain INPUT (policy ACCEPT 498 packets, 33973 bytes)
-num   pkts bytes target     prot opt in     out     source               destination          
-1        0     0 DROP       17   --  *      *       0.0.0.0/0            0.0.0.0/0            udp dpt:53
-};
-  ```
+    ```
+      Chain INPUT (policy ACCEPT 498 packets, 33973 bytes)
+       num   pkts bytes target     prot opt in     out     source               destination          
+       1        0     0 DROP       17   --  *      *       0.0.0.0/0            0.0.0.0/0            udp dpt:53
+      };
+    ```
 Rule #1 explicitly dropped incoming UDP traffic on port 53 (prot 17), blocking all client network access to BIND.
 
 - **Fix (what we changed):**
-  (1) Edited /etc/bind/named.conf.local using nano and changed file "/etc/bind/db.MISSING"; to file "/etc/bind/db.novapeak.lab";
+(1) Edited /etc/bind/named.conf.local using nano and changed file "/etc/bind/db.MISSING"; to file "/etc/bind/db.novapeak.lab";
 
-  (2) Restarted BIND:
+(2) Restarted BIND:
 
-```
-systemctl restart named
-```
+    ```
+     systemctl restart named
+    ```
 (3) Deleted the blocking firewall rule:
 
-```
-iptables -D INPUT -p udp --dport 53 -j DROP
-```
+    ```
+     iptables -D INPUT -p udp --dport 53 -j DROP
+    ```
 
 - **Confirmation (output showing it now works):**
 
 Running named-checkconf -z confirmed the zone loaded successfully
-  ```
-  zone novapeak.lab/IN: loaded serial 2024010101
-zone 19.168.192.in-addr.arpa/IN: loaded serial 2024010101
-  ```
+    ```
+     zone novapeak.lab/IN: loaded serial 2024010101
+     zone 19.168.192.in-addr.arpa/IN: loaded serial 2024010101
+    ```
 
 Re-checking iptables -vnL INPUT --line-numbers verified the DROP rule was removed. Finally, running check_lab.py confirmed both C1 and C3 passed
 
-```
-[ 2/2 ] C1 named is authoritative for novapeak.lab and reachable from the client.
-[ 2/2 ] C3 reverse lookup of 192.168.19.10 returns ns1.
-```
+    ```
+    [ 2/2 ] C1 named is authoritative for novapeak.lab and reachable from the client.
+    [ 2/2 ] C3 reverse lookup of 192.168.19.10 returns ns1.
+   ```
 - **Found/proved by:** Kyaw San
 
 ---

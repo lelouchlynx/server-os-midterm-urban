@@ -111,8 +111,6 @@ Re-checking iptables -vnL INPUT --line-numbers verified the DROP rule was remove
   ```
 - **Found/proved by:** Kyaw San
 
----
-
 ## Fault 3
 
 - **Symptom (what we observed):**
@@ -160,4 +158,65 @@ Re-checking iptables -vnL INPUT --line-numbers verified the DROP rule was remove
   ```
 - **Found/proved by:** Sai Wanna Htoo (`lelouchlynx`)
 
+---
+
+## Fault 4: DHCP Advertises External Resolver Blocking Client Domain Resolution (C9 & C11)
+
+  - **Symptom (what we observed):**
+
+    Running python3 /root/grading/check_lab.py --group lab01 --phase build failed both the DHCP resolver check (C9) and client resolution test (C11)
+    
+    ```
+    [ 0/3 ] C9 DHCP advertises 8.8.8.8, expected the company DNS 192.168.19.10 -- this is the integration the whole project is about
+    [ 0/3 ] C11 using the leased resolver 8.8.8.8, www did not resolve to 192.168.19.20 (got nothing). If the leased resolver is a public one, that is the integration bug.
+    ```
+
+
+    **Hypothesis (what we suspected and why):**
+    The DHCP server configuration file (/etc/dhcp/dhcpd.conf) was set to hand out Google's public DNS IP (8.8.8.8) instead of the internal company DNS server (192.168.19.10). Because clients used Google's public DNS, they could not resolve internal domain names like www.novapeak.lab.
+
+    **Proof (the command that confirmed the cause):**
+    We inspected the DHCP configuration file using cat /etc/dhcp/dhcpd.conf:
+    ```
+    subnet 192.168.19.0 netmask 255.255.255.0 {
+            range 192.168.19.104 192.168.19.144;
+            option routers 192.168.19.1;
+            option domain-name-servers 8.8.8.8;
+    }
+    ```
+
+    The setting option domain-name-servers 8.8.8.8; confirmed the integration bug.
+
+    Fix (what we changed):
+
+        Edited /etc/dhcp/dhcpd.conf using nano and updated the DNS option line to
+
+        ```
+        option domain-name-servers 192.168.19.10;
+
+        Validated syntax with dhcpd -t -cf /etc/dhcp/dhcpd.conf.
+
+        Restarted the DHCP service:
+        Bash
+
+        systemctl restart isc-dhcp-server
+        ```
+
+    **Confirmation (output showing it now works):**
+    We checked service status with systemctl status isc-dhcp-server --no-pager
+
+    ```
+    ● isc-dhcp-server.service - ISC DHCP IPv4 server
+         Active: active (running) since Fri 2026-10-23 07:23:36 UTC; 7s ago
+    ```
+
+    Re-running python3 /root/grading/check_lab.py --group lab01 --phase build confirmed both C9 and C11 passed cleanly:
+    Plaintext
+
+    ```
+    [ 3/3 ] C9 DHCP advertises the company DNS (192.168.19.10)
+    [ 3/3 ] C11 client resolves www via the leased resolver
+    ```
+
+  - **Found/proved by:** Aung Chan Myae
 ---

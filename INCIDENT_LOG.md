@@ -49,8 +49,7 @@ Running python3 /root/grading/check_lab.py --group lab01 --phase build failed bo
 
   ```
   [ 0/2 ] C1 client cannot reach named at 192.168.19.10 (timeout/no status). Check listen-on, allow-query, firewall, and that it serves on lan0.
-[ 0/2 ] C3 reverse lookup of 192.168.19.10 did not return ns1 (got nothing). Check the reverse zone and its PTR.
-[ 1/2 ] C4 named-checkconf -z FAILED; named-checkzone clean
+  [ 0/2 ] C3 reverse lookup of 192.168.19.10 did not return ns1 (got nothing). Check the reverse zone and its PTR.
   ```
   Running named-checkconf -z directly on the server outputted:
 
@@ -106,6 +105,7 @@ Running named-checkconf -z confirmed the zone loaded successfully
 Re-checking iptables -vnL INPUT --line-numbers verified the DROP rule was removed. Finally, running check_lab.py confirmed both C1 and C3 passed
 
   ```
+   [ 2/2 ] C4 named-checkconf -z FAILED; named-checkzone clean.
    [ 2/2 ] C1 named is authoritative for novapeak.lab and reachable from the client.
    [ 2/2 ] C3 reverse lookup of 192.168.19.10 returns ns1.
   ```
@@ -189,7 +189,7 @@ Re-checking iptables -vnL INPUT --line-numbers verified the DROP rule was remove
 
     Fix (what we changed):
 
-        Edited /etc/dhcp/dhcpd.conf using nano and updated the DNS option line to
+    Edited /etc/dhcp/dhcpd.conf using nano and updated the DNS option line to
 
         ```
         option domain-name-servers 192.168.19.10;

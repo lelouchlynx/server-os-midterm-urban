@@ -9,7 +9,7 @@ Urban is a five-member server administration midterm project for the  192-442 Se
 | Name | Student ID | GitHub username | Role |
 |---|---|---|---|
 | Sai Wanna Htoo | 6705140028 | [lelouchlynx](https://github.com/lelouchlynx) | Team Lead & DNS Record Diagnostics (C2) |
-| Toe Twel Tar Htut | 6705140007 | [YollaYollie](https://github.com/YollaYollie) | AI Evaluation Lead & Session Management |
+| Toe Twel Tar Htut | 6705140007 | [Toe-Twel-Tar-Htut](https://github.com/Toe-Twel-Tar-Htut) | AI Evaluation Lead & Session Management |
 | Kyaw San | 6705140029 | [KyawSanAlpha](https://github.com/KyawSanAlpha) | Firewall & Network Diagnostics (C1, C3) |
 | Aung Chan Myae | 6705140035 | [Rowan10-uzzz](https://github.com/Rowan10-uzzz) | DHCP & Domain Integration (C9, C11) |
 | Nyi Sett | 6705140078 | [Wha1e0134](https://github.com/Wha1e0134) | BIND9 Zone Configuration (C4) |

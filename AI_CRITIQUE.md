@@ -10,8 +10,9 @@ Nyi Sett (6705140078)
 ## Part 3a: Declaration (required)
 | AI tool | What we used it for |
 | --- | --- |
-| CHATGPT | Asked to explain why named-checkconf -z failed while named-checkzone passed, and to help diagnose the DNS configuration problem.|
-| | |
+| ChatGPT | Asked to explain why named-checkconf -z failed while named-checkzone passed, and to help diagnose the DNS configuration problem.|
+| ChatGPT | Asked for initial diagnostic steps regarding why check_lab.py reported a network reachability timeout on C1. |
+| Gemini | Asked to analyze our BIND named.conf.options and iptables rule outputs to determine why reverse lookup (C3) and client queries failed.|
 
 (If you used no AI, write "None" and say how you worked instead.)
 

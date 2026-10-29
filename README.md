@@ -38,7 +38,7 @@ server-os-midterm-urban/
 
 ## Checker
 
-The automated checker evaluates 10 grading checkpoints (C1–C10): validating BIND9 configuration syntax and zone loading (C4), server reachability and authority for `novapeak.lab` (C1), correct forward A records for all hosts (`ns1`, `www`, `mail`, `api`) (C2), reverse PTR lookup resolution (C3), ISC DHCP daemon configuration and runtime health (C5), client lease acquisition (C6), subnet address pool and netmask allocation (C7), default gateway routing (C8), company DNS advertisement (`192.168.19.10`) (C9), and domain search name propagation (`novapeak.lab`) (C10).
+The automated checker evaluates 11 grading checkpoints (C1–C11): validating BIND9 configuration syntax and zone loading (C4), server reachability and authority for `novapeak.lab` (C1), correct forward A records for all hosts (`ns1`, `www`, `mail`, `api`) (C2), reverse PTR lookup resolution (C3), ISC DHCP daemon configuration and runtime health (C5), client lease acquisition (C6), subnet address pool and netmask allocation (C7), default gateway routing (C8), company DNS advertisement (`192.168.19.10`) (C9), and domain search name propagation (`novapeak.lab`) (C10).
 
 ## Project Components
 
@@ -56,4 +56,4 @@ The automated checker evaluates 10 grading checkpoints (C1–C10): validating BI
 
 ## Conclusion
 
-Our team methodically diagnosed and resolved all service misconfigurations in the `novapeak.lab` environment. Initially, critical DNS resolution and DHCP operations failed due to incorrect zone file references, bad host IP records, interface binding omissions, and improper DNS option advertisements. By formulating hypotheses, confirming proofs with diagnostic commands, and applying verified configuration fixes, our team achieved a 100% pass rate (22/22 points across C1–C10) on the automated evaluation suite. Through this project, we reinforced our practical experience in Linux system administration, network service integration, and evaluating the strengths and limitations of AI diagnostic tools on live systems.
+Our team methodically diagnosed and resolved all service misconfigurations in the `novapeak.lab` environment. Initially, critical DNS resolution and DHCP operations failed due to incorrect zone file references, bad host IP records, interface binding omissions, and improper DNS option advertisements. By formulating hypotheses, confirming proofs with diagnostic commands, and applying verified configuration fixes, our team achieved a 100% pass rate (25/25 points across C1–C10) on the automated evaluation suite. Through this project, we reinforced our practical experience in Linux system administration, network service integration, and evaluating the strengths and limitations of AI diagnostic tools on live systems.

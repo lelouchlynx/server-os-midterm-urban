@@ -92,7 +92,7 @@ We removed the blocking firewall rule:
 We then inspected the firewall rules again to confirm that the DROP rule had been removed.
 
   ```
-   iptables -D INPUT -p udp --dport 53 -j DROP
+   iptables -vnL INPUT --line-numbers
   ```
 
 - **Confirmation (output showing it now works):**

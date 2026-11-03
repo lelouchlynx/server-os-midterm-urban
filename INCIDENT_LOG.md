@@ -3,7 +3,7 @@
 Group: Urban   
 Members:  
   - Sai Wanna Htoo (6705140028) — `lelouchlynx`
-  - Toe Twel Tar Htut (6705140007) — `YollaYollie`
+  - Toe Twel Tar Htut (6705140007) — `Toe-Twel-Tar-Htut`
   - Kyaw San (6705140029) — `KyawSanAlpha`
   - Aung Chan Myae (6705140035) — `Rowan10-uzzz`
   - Nyi Sett (6705140078) — `Wha1e0134`
@@ -36,6 +36,8 @@ First, we verified the file mismatch in /etc/bind/named.conf.local
 - **Fix (what we changed):**
   ```
   nano /etc/bind/named.conf.local
+
+  Edited /etc/bind/named.conf.local to change file "/etc/bind/db.MISSING"; to file "/etc/bind/db.novapeak.lab";, checked syntax with named-checkconf -z, and reloaded BIND9.
   ```
 - **Confirmation (output showing it now works):**
   ```
@@ -106,6 +108,8 @@ These results confirmed that the client could reach the authoritative DNS server
 
 - **Found/proved by:** Kyaw San (6705140029) — `KyawSanAlpha`
 
+---
+
 ## Fault 3 — Incorrect API Host Address (C2)
 
 - **Symptom (what we observed):**
@@ -155,7 +159,7 @@ These results confirmed that the client could reach the authoritative DNS server
 
 ---
 
-## Fault 4: DHCP Advertises External Resolver Blocking Client Domain Resolution (C9 & C11)
+## Fault 4 — DHCP Advertises External Resolver Blocking Client Domain Resolution (C9 & C11)
 
   - **Symptom (what we observed):**
 
@@ -193,8 +197,7 @@ These results confirmed that the client could reach the authoritative DNS server
         Validated syntax with dhcpd -t -cf /etc/dhcp/dhcpd.conf.
 
         Restarted the DHCP service:
-        Bash
-
+        
         systemctl restart isc-dhcp-server
         ```
 
